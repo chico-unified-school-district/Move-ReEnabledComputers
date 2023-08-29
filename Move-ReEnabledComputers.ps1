@@ -12,13 +12,9 @@ param (
  )
 
 
-function New-ADSession ([string[]]$cmdlets, $dc) {
- $adSession = New-PSSession -ComputerName $DC -Credential $ADCredential
- Import-PSSession -Session $adSession -Module ActiveDirectory -CommandName $cmdlets -AllowClobber | Out-Null
-}
-
 Function MoveReEnabledMachines{
 $Computers = Get-ADComputer -Filter {Enabled -eq $true} -SearchBase $DisabledOU -Properties Description
+$Computers
     If($Computers){
       Foreach($Computer in $Computers){
       $error.clear()
@@ -33,9 +29,6 @@ $Computers = Get-ADComputer -Filter {Enabled -eq $true} -SearchBase $DisabledOU 
     }
 }
 # main
-. .\lib\Clear-SessionData.ps1
-. .\lib\Select-DomainController.ps1
-. .\lib\Show-TestRun.ps1
 
 MoveReEnabledMachines
 
