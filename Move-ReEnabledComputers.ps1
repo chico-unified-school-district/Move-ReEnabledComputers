@@ -8,14 +8,8 @@ When the object is Re-enabled this script will Move it back into the OU in the D
 param (
  [Parameter(Mandatory = $True)]
  [Alias('DCs')]
- [string[]]$DomainControllers,
- [Parameter(Mandatory = $True)]
- [System.Management.Automation.PSCredential]$ADCredential,
- [Parameter(Mandatory = $True)]
- [Alias('wi')]
- [switch]$WhatIf = $True
-)
-$DisabledOU = "OU=Disabled_Computer_Objects,DC=chico,DC=usd"
+ [string[]]$DomainControllers
+ )
 
 
 function New-ADSession ([string[]]$cmdlets, $dc) {
@@ -24,7 +18,7 @@ function New-ADSession ([string[]]$cmdlets, $dc) {
 }
 
 Function MoveReEnabledMachines{
-$Computers = Get-ADComputer -Filter {Enabled -eq $true} -SearchBase $DisabledOU -Properties Description -Whatif:$WhatIf
+$Computers = Get-ADComputer -Filter {Enabled -eq $true} -SearchBase $DisabledOU -Properties Description
     If($Computers){
       Foreach($Computer in $Computers){
       $error.clear()
