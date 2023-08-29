@@ -6,11 +6,11 @@ When the object is Re-enabled this script will Move it back into the OU in the D
 [cmdletbinding()]
 param (
  [Alias('DisabledOU')]
- [string]$DisabledOU
+ [string]$OU
  )
 
 Function MoveReEnabledMachines{
-$Computers = Get-ADComputer -Filter {Enabled -eq $true} -SearchBase $DisabledOU -Properties Description
+$Computers = Get-ADComputer -Filter {Enabled -eq $true} -SearchBase $OU -Properties Description
 $Computers
     If($Computers){
       Foreach($Computer in $Computers){
