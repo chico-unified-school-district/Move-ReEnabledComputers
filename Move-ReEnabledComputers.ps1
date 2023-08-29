@@ -3,16 +3,6 @@ This Script is meant to be run on the OU where Disabled objects are moved into.
 When the object is Re-enabled this script will Move it back into the OU in the Description field of the Computer.
 #>
 
-
-[cmdletbinding()]
-param (
- [Parameter(Mandatory = $True)]
- [Alias('DCs')]
- [string[]]$DomainControllers
- )
-
-
-Function MoveReEnabledMachines{
 $Computers = Get-ADComputer -Filter {Enabled -eq $true} -SearchBase $DisabledOU -Properties Description
 $Computers
     If($Computers){
@@ -27,9 +17,6 @@ $Computers
         if (!$error) {"Success: $MachineName : Has Been Moved To $Desc "}
         }
     }
-}
-# main
 
-MoveReEnabledMachines
 
 
