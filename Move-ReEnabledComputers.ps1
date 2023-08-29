@@ -13,9 +13,9 @@ param (
  [System.Management.Automation.PSCredential]$ADCredential,
  [Parameter(Mandatory = $True)]
  [Alias('wi')]
- [switch]$WhatIf
+ [switch]$WhatIf = $True
 )
-
+$DisabledOU = "OU=Disabled_Computer_Objects,DC=chico,DC=usd"
 
 
 function New-ADSession ([string[]]$cmdlets, $dc) {
