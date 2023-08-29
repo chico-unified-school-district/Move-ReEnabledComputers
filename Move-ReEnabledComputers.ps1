@@ -27,6 +27,7 @@ function New-ADSession ([string[]]$cmdlets, $dc) {
 
 Function MoveReEnabledMachines{
 $Computers = Get-ADComputer -Filter {Enabled -eq $true} -SearchBase $DisabledOU -Properties Description -Whatif:$WhatIf
+If($Computers){New-ADSession -cmdlets 'GetADComputer', 'Move-ADObject' -dc $DC}
     Foreach($Computer in $Computers){
     $error.clear()
     $MachineName = $Computer.Name
