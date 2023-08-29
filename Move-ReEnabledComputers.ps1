@@ -25,11 +25,8 @@ function New-ADSession ([string[]]$cmdlets, $dc) {
  Import-PSSession -Session $adSession -Module ActiveDirectory -CommandName $cmdlets -AllowClobber | Out-Null
 }
 
-Function GetEnabledMachines{
-$Computers = Get-ADComputer -Filter {Enabled -eq $true} -SearchBase $DisabledOU -Properties Description -Whatif:$WhatIf
-}
-
 Function MoveReEnabledMachines{
+$Computers = Get-ADComputer -Filter {Enabled -eq $true} -SearchBase $DisabledOU -Properties Description -Whatif:$WhatIf
     Foreach($Computer in $Computers){
     $error.clear()
     $MachineName = $Computer.Name
@@ -43,5 +40,7 @@ Function MoveReEnabledMachines{
 . .\lib\Clear-SessionData.ps1
 . .\lib\Select-DomainController.ps1
 . .\lib\Show-TestRun.ps1
+
+MoveReEnabledMachines
 
 
