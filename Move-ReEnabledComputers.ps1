@@ -12,8 +12,6 @@ param (
  [Parameter(Mandatory = $True)]
  [System.Management.Automation.PSCredential]$ADCredential,
  [Parameter(Mandatory = $True)]
- [Alias('DisabledOU')]
- [string]$CompOrgUnitPath,
  [Alias('wi')]
  [switch]$WhatIf
 )
@@ -27,12 +25,15 @@ function New-ADSession ([string[]]$cmdlets, $dc) {
 
 Function MoveReEnabledMachines{
 $Computers = Get-ADComputer -Filter {Enabled -eq $true} -SearchBase $DisabledOU -Properties Description -Whatif:$WhatIf
-If($Computers){New-ADSession -cmdlets 'GetADComputer', 'Move-ADObject' -dc $DC}
+If($Computers){
     Foreach($Computer in $Computers){
     $error.clear()
     $MachineName = $Computer.Name
     $Desc = Get-ADComputer $MachineName -Properties Description | select Description -ExpandProperty Description | ForEach-Object {$_ -replace '^.*?,'}
-    Try{Get-ADComputer -Identity $Computer | Move-ADObject -TargetPath $Desc -ErrorAction Stop -Whatif:$WhatIf} Catch {"Failure: $MachineName Was Unable To Be Moved To $Desc"}
+    Try{Get-ADComputer -Identity $Computer | Set-ADComputer -Description " "
+		Get-ADComputer -Identity $Computer | Move-ADObject -TargetPath $Desc
+	
+	} Catch {"Failure: $MachineName Was Unable To Be Moved To $Desc"}
     if (!$error) {"Success: $MachineName : Has Been Moved To $Desc "}
     }
 }
