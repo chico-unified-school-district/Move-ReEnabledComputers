@@ -25,19 +25,19 @@ function New-ADSession ([string[]]$cmdlets, $dc) {
 
 Function MoveReEnabledMachines{
 $Computers = Get-ADComputer -Filter {Enabled -eq $true} -SearchBase $DisabledOU -Properties Description -Whatif:$WhatIf
-If($Computers){
-    Foreach($Computer in $Computers){
-    $error.clear()
-    $MachineName = $Computer.Name
-    $Desc = Get-ADComputer $MachineName -Properties Description | select Description -ExpandProperty Description | ForEach-Object {$_ -replace '^.*?,'}
-    Try{Get-ADComputer -Identity $Computer | Set-ADComputer -Description " "
-		Get-ADComputer -Identity $Computer | Move-ADObject -TargetPath $Desc
+    If($Computers){
+      Foreach($Computer in $Computers){
+      $error.clear()
+       $MachineName = $Computer.Name
+       $Desc = Get-ADComputer $MachineName -Properties Description | select Description -ExpandProperty Description | ForEach-Object {$_ -replace '^.*?,'}
+       Try{Get-ADComputer -Identity $Computer | Set-ADComputer -Description " "
+    		Get-ADComputer -Identity $Computer | Move-ADObject -TargetPath $Desc
 	
-	} Catch {"Failure: $MachineName Was Unable To Be Moved To $Desc"}
-    if (!$error) {"Success: $MachineName : Has Been Moved To $Desc "}
+    	} Catch {"Failure: $MachineName Was Unable To Be Moved To $Desc"}
+        if (!$error) {"Success: $MachineName : Has Been Moved To $Desc "}
+        }
     }
 }
-
 # main
 . .\lib\Clear-SessionData.ps1
 . .\lib\Select-DomainController.ps1
