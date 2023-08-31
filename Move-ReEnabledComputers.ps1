@@ -24,6 +24,12 @@ $Computers
         if (!$error) {"Success: $MachineName : Has Been Moved To $Desc "}
         }
     }
+    Else{
+    $DateTimeBefore = (Get-Date).AddDays(-1).ToString('MM-dd-yy')
+    $DateTime = (Get-Date).ToString('MM-dd-yy hh:mm')
+
+    "No Computers Needed To Be Moved Between: $DateTimeBefore and $DateTime"
+    }
 }
 # main
 
